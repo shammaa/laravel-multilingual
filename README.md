@@ -100,15 +100,10 @@ This will automatically create routes for all locales. By default, only the defa
 
 ### 2. Using Middleware
 
-Add the middleware to your routes or `Kernel.php`:
+The middleware automatically detects and sets the locale for **ALL routes**. Add it to your middleware groups:
 
 ```php
-// In routes/web.php
-Route::middleware(['multilingual.locale'])->group(function () {
-    // Your routes here
-});
-
-// Or in app/Http/Kernel.php
+// In app/Http/Kernel.php (recommended - applies to all routes)
 protected $middlewareGroups = [
     'web' => [
         // ... other middleware
@@ -116,6 +111,15 @@ protected $middlewareGroups = [
     ],
 ];
 ```
+
+**That's it!** The middleware will automatically:
+- ✅ Detect locale from URL (`/en/page`, `/ar/page`)
+- ✅ Fall back to session/cookie if no locale in URL
+- ✅ Fall back to browser language if nothing found
+- ✅ Set the locale for your entire application
+- ✅ Work on **all routes automatically**
+
+**No need to add it to individual routes!** Once added to middleware groups, it works everywhere.
 
 ### 3. Language Switcher
 
@@ -320,22 +324,76 @@ locale_flag($locale = null)              // Get locale flag
 localized_route($name, $params, $locale) // Generate localized route URL
 ```
 
-### Using in Models
+### Working with Models (No Model Modification Required!)
+
+**You don't need to modify your Models!** Just use helper functions directly in your routes and Blade templates. The middleware and routes handle everything automatically.
+
+**Example: Blog Post**
 
 ```php
-use Shammaa\LaravelMultilingual\Traits\HasLocalizedRoutes;
-
+// Your Model - NO changes needed!
 class Post extends Model
 {
-    use HasLocalizedRoutes;
-    
-    // Automatically get localized URL
-    public function getUrl($locale = null)
-    {
-        return $this->getLocalizedUrl($locale);
-    }
+    protected $fillable = ['title', 'slug', 'content'];
 }
+
+// Your routes file - just use Route::localized()
+Route::localized(function () {
+    Route::get('/posts/{post}', [PostController::class, 'show'])
+        ->name('posts.show');
+});
 ```
+
+**In your Blade templates or controllers - use helper functions:**
+
+```php
+// Get localized URL for a post (in Blade)
+<a href="{{ localized_route('posts.show', $post) }}">
+    {{ $post->title }}
+</a>
+
+// Get localized URL for specific locale
+<a href="{{ localized_route('posts.show', $post, 'en') }}">
+    Read in English
+</a>
+
+// Get all localized URLs for all languages
+@foreach(all_localized_urls() as $locale => $url)
+    <a href="{{ $url }}">
+        {{ locale_flag($locale) }} {{ locale_name($locale) }}
+    </a>
+@endforeach
+```
+
+**Real-world example - Language switcher in post view:**
+
+```blade
+{{-- In your post.blade.php --}}
+<h1>{{ $post->title }}</h1>
+<p>{{ $post->content }}</p>
+
+{{-- Language switcher --}}
+<div class="language-switcher">
+    @foreach(Multilingual::getSupportedLocales() as $locale)
+        <a href="{{ localized_route('posts.show', $post, $locale) }}"
+           class="{{ app()->getLocale() === $locale ? 'active' : '' }}">
+            {{ locale_flag($locale) }} {{ locale_name($locale) }}
+        </a>
+    @endforeach
+</div>
+```
+
+**That's it!** No Model modification needed. Everything works automatically:
+
+1. **Middleware** - Automatically detects and sets locale for ALL routes
+2. **Routes** - Use `Route::localized()` to register multilingual routes
+3. **Helper Functions** - Generate localized URLs easily
+
+**How it works:**
+- ✅ Middleware automatically detects locale from URL, session, cookie, or browser
+- ✅ All routes under `Route::localized()` get locale prefixes automatically
+- ✅ Helper functions add locale to any URL you generate
+- ✅ No Model changes needed - zero modification to your existing code!
 
 ## License
 

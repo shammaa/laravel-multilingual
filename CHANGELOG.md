@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2025-01-XX
+
+### Improved
+- Enhanced documentation in README.md with clearer examples and explanations
+- Improved `HasLocalizedRoutes` trait with better auto-detection capabilities
+- Clarified that the trait is optional and not required for basic functionality
+- Updated documentation to emphasize middleware-based approach as primary method
+
+### Documentation
+- Added comprehensive examples for using models with short links
+- Clarified that middleware handles everything automatically
+- Improved explanation of automatic route detection
+- Added more detailed usage examples
+
+## [1.0.1] - 2025-01-XX
+
+### Improved
+- Enhanced documentation in README.md with clearer examples and explanations
+- Improved `HasLocalizedRoutes` trait with better auto-detection capabilities
+- Clarified that the trait is optional and not required for basic functionality
+- Updated documentation to emphasize middleware-based approach as primary method
+- Better explanation of how middleware automatically works on all routes
+
+### Documentation
+- Added comprehensive examples showing middleware-based approach is the main method
+- Clarified that model modification is not required - everything works through routes and middleware
+- Improved explanation of automatic route detection
+- Added more detailed usage examples for better understanding
+
 ## [1.0.0] - 2024-01-XX
 
 ### Added
