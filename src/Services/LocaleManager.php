@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Shammaa\LaravelMultilingual\Services;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
+use Shammaa\LaravelMultilingual\Exceptions\InvalidLocaleException;
+use Shammaa\LaravelMultilingual\Services\LocaleValidator;
 
 class LocaleManager
 {
@@ -49,11 +52,22 @@ class LocaleManager
     }
 
     /**
-     * Check if locale is supported
+     * Check if locale is supported.
+     *
+     * @param string $locale The locale to check
+     * @return bool
      */
     public function isSupportedLocale(string $locale): bool
     {
-        return in_array($locale, $this->getSupportedLocales(), true);
+        try {
+            return LocaleValidator::validateLocale($locale, false);
+        } catch (\Exception $e) {
+            Log::warning('Locale validation failed', [
+                'locale' => $locale,
+                'error' => $e->getMessage(),
+            ]);
+            return false;
+        }
     }
 
     /**
