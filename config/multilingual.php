@@ -101,7 +101,6 @@ return [
     'available_locales' => [
         // Middle East & Asia
         'ar' => ['name' => 'العربية', 'flag' => '🇸🇾', 'native' => 'العربية'],
-        'he' => ['name' => 'Hebrew', 'flag' => '🇮🇱', 'native' => 'עברית'],
         'fa' => ['name' => 'Persian', 'flag' => '🇮🇷', 'native' => 'فارسی'],
         'ur' => ['name' => 'Urdu', 'flag' => '🇵🇰', 'native' => 'اردو'],
         'tr' => ['name' => 'Turkish', 'flag' => '🇹🇷', 'native' => 'Türkçe'],
@@ -369,7 +368,6 @@ return [
     */
     'rtl_locales' => [
         'ar',
-        'he',
         'fa',
         'ur',
     ],
